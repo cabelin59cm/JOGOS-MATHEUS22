@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Clique Rápido</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .game-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            background-color: #fff;
+            border: 2px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .click-button {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: #3498db;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .click-button:hover {
+            background-color: #2980b9;
+        }
+
+        .score {
+            font-size: 20px;
+            margin: 10px;
+        }
+
+        .timer {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        .reset-btn {
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .reset-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <div class="score" id="score">Pontos: 0</div>
+        <div class="timer" id="timer">Tempo: 10s</div>
+        <button class="reset-btn" id="reset-btn" onclick="resetGame()">Jogar Novamente</button>
+    </div>
+
+    <script>
+        const scoreElement = document.getElementById('score');
+        const timerElement = document.getElementById('timer');
+        const resetBtn = document.getElementById('reset-btn');
+        const gameContainer = document.querySelector('.game-container');
+        const gameSize = 500;
+        let score = 0;
+        let timeLeft = 10;  // Tempo do jogo em segundos
+        let gameInterval;
+        let buttonTimeout;
+        let gameActive = false;
+
+        // Função para gerar uma posição aleatória para o botão
+        function getRandomPosition() {
+            const x = Math.floor(Math.random() * (gameSize - 100)); // 100 é o tamanho do botão
+            const y = Math.floor(Math.random() * (gameSize - 100));
+            return { x, y };
+        }
+
+        // Função para criar o botão de clique
+        function createClickButton() {
+            const button = document.createElement('button');
+            button.classList.add('click-button');
+            button.textContent = 'Clique!';
+            const { x, y } = getRandomPosition();
+            button.style.left = `${x}px`;
+            button.style.top = `${y}px`;
+            button.onclick = () => {
+                if (gameActive) {
+                    score++;
+                    scoreElement.textContent = `Pontos: ${score}`;
+                    moveButton();
+                }
+            };
+            gameContainer.appendChild(button);
+
+            buttonTimeout = setTimeout(() => {
+                button.remove();
+                if (gameActive) moveButton();
+            }, 1000);  // O botão desaparece depois de 1 segundo
+        }
+
+        // Função para mover o botão para uma nova posição aleatória
+        function moveButton() {
+            createClickButton();
+        }
+
+        // Função para atualizar o tempo
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timerElement.textContent = `Tempo: ${timeLeft}s`;
+            } else {
+                endGame();
+            }
+        }
+
+        // Função para iniciar o jogo
+        function startGame() {
+            gameActive = true;
+            score = 0;
+            timeLeft = 10;
+            scoreElement.textContent = `Pontos: ${score}`;
+            timerElement.textContent = `Tempo: ${timeLeft}s`;
+            resetBtn.style.display = 'none';
+
+            // Iniciar o temporizador
+            gameInterval = setInterval(updateTimer, 1000);
+
+            // Criar o primeiro botão
+            moveButton();
+        }
+
+        // Função para encerrar o jogo
+        function endGame() {
+            gameActive = false;
+            clearInterval(gameInterval);
+            clearTimeout(buttonTimeout);
+            timerElement.textContent = 'Tempo esgotado!';
+            resetBtn.style.display = 'block';
+        }
+
+        // Função para reiniciar o jogo
+        function resetGame() {
+            gameContainer.innerHTML = '<div class="score" id="score">Pontos: 0</div><div class="timer" id="timer">Tempo: 10s</div>';
+            startGame();
+        }
+
+        // Iniciar o jogo quando a página for carregada
+        startGame();
+    </script>
+
+</body>
+</html>
