@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz sobre Cristiano Ronaldo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-top: 20px;
+    }
+
+    #quiz-container {
+      width: 80%;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .question {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .options {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .options li {
+      margin: 10px 0;
+    }
+
+    button {
+      background-color: #32cd32;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #228b22;
+    }
+
+    #result {
+      margin-top: 20px;
+    }
+
+    #ronaldo-img {
+      width: 100%;
+      max-width: 500px;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>Quiz sobre Cristiano Ronaldo</h1>
+  <div id="quiz-container">
+    <div id="question-container">
+      <div class="question" id="question-text"></div>
+      <ul class="options" id="options-container"></ul>
+      <button id="next-button">Próxima Pergunta</button>
+    </div>
+    <div id="result" style="display:none;">
+      <h2>Você completou o quiz!</h2>
+      <p id="score"></p>
+      <img id="ronaldo-img" src="" alt="Cristiano Ronaldo">
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "Qual é o nome completo de Cristiano Ronaldo?",
+        options: ["Cristiano Ronaldo dos Santos Aveiro", "Cristiano Ronaldo Ferreira", "Cristiano Ronaldo Costa", "Cristiano Ronaldo Oliveira"],
+        correct: 0,
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Cristiano_Ronaldo_2018.jpg/330px-Cristiano_Ronaldo_2018.jpg"
+      },
+      {
+        question: "Em que ano Cristiano Ronaldo ganhou sua primeira Bola de Ouro?",
+        options: ["2008", "2009", "2010", "2007"],
+        correct: 0,
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Cristiano_Ronaldo_Ballon_d%27Or_2008.jpg/500px-Cristiano_Ronaldo_Ballon_d%27Or_2008.jpg"
+      },
+      {
+        question: "Qual time Cristiano Ronaldo jogou antes do Manchester United em 2003?",
+        options: ["Sporting CP", "Barcelona", "Real Madrid", "Santa Cruz"],
+        correct: 0,
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Sporting_CP_logo.svg/2560px-Sporting_CP_logo.svg.png"
+      },
+      {
+        question: "Quantos gols Ronaldo marcou pela seleção de Portugal até 2023?",
+        options: ["125", "140", "115", "190"],
+        correct: 1,
+        image: "https://upload.wikimedia.org/wikipedia/commons/6/63/Cristiano_Ronaldo_2018.jpg"
+      },
+      {
+        question: "Cristiano Ronaldo tem quantos filhos?",
+        options: ["4", "3", "7", "5"],
+        correct: 0,
+        image: "https://upload.wikimedia.org/wikipedia/commons/4/47/Cristiano_Ronaldo_and_his_family_2018.jpg"
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    const questionText = document.getElementById("question-text");
+    const optionsContainer = document.getElementById("options-container");
+    const nextButton = document.getElementById("next-button");
+    const resultContainer = document.getElementById("result");
+    const scoreText = document.getElementById("score");
+    const ronaldoImg = document.getElementById("ronaldo-img");
+
+    // Função para carregar a próxima pergunta
+    function loadQuestion() {
+      const question = questions[currentQuestionIndex];
+      questionText.textContent = question.question;
+      optionsContainer.innerHTML = '';
+
+      question.options.forEach((option, index) => {
+        const li = document.createElement("li");
+        li.textContent = option;
+        li.onclick = () => checkAnswer(index);
+        optionsContainer.appendChild(li);
+      });
+
+      nextButton.style.display = 'none';  // Ocultar botão "Próxima Pergunta" enquanto as opções estão disponíveis
+    }
+
+    // Função para verificar a resposta
+    function checkAnswer(selectedIndex) {
+      const question = questions[currentQuestionIndex];
+
+      if (selectedIndex === question.correct) {
+        score++;
+      }
+
+      nextButton.style.display = 'block'; // Mostrar o botão "Próxima Pergunta"
+
+      if (selectedIndex === question.correct) {
+        alert("Resposta correta!");
+      } else {
+        alert("Resposta errada!");
+      }
+    }
+
+    // Função para passar para a próxima pergunta
+    function nextQuestion() {
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+  resultContainer.style.display = 'block'; // Exibe a div de resultado
+  scoreText.textContent = `Você acertou ${score} de ${questions.length} perguntas!`;
+
+  // Mostrar imagem de Cristiano Ronaldo comemorando
+  ronaldoImg.src = "file:///C:/Users/Aluno/Downloads/cr7.jpg";  //
+
+  resultContainer.style.textAlign = "center"; // Centraliza o conteúdo do resultado
+  resultContainer.style.fontSize = "1.5rem"; // Aumenta o tamanho da fonte
+  resultContainer.style.fontWeight = "bold"; // Torna o texto mais destacado
+}
+
+
+    // Inicialização do quiz
+    loadQuestion();
+    nextButton.addEventListener('click', nextQuestion);
+
+  </script>
+</body>
+</html>
